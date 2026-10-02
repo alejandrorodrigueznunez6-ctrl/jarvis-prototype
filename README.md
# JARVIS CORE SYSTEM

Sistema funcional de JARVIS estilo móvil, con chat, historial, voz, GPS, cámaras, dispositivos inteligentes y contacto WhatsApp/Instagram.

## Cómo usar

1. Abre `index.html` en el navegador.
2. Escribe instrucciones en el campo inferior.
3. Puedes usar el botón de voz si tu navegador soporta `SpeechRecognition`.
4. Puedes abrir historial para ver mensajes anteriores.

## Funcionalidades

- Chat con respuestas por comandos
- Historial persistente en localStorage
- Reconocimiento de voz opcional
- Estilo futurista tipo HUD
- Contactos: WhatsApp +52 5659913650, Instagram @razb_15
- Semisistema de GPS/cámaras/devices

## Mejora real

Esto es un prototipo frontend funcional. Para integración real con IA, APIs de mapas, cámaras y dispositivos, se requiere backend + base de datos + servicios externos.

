@@ -1,0 +1,240 @@
+const chatArea = document.getElementById('chatArea');
+const userInput = document.getElementById('userInput');
+const sendBtn = document.getElementById('sendBtn');
+const voiceTrigger = document.getElementById('voiceTrigger');
+const historyTrigger = document.getElementById('historyTrigger');
+const voiceModal = document.getElementById('voiceModal');
+const closeVoice = document.getElementById('closeVoice');
+const closeHistory = document.getElementById('closeHistory');
+const historyModal = document.getElementById('historyModal');
+const historyList = document.getElementById('historyList');
+const voiceStatus = document.getElementById('voiceStatus');
+const voiceTranscript = document.getElementById('voiceTranscript');
+const quickHelp = document.getElementById('quickHelp');
+const quickStatus = document.getElementById('quickStatus');
+const quickHome = document.getElementById('quickHome');
+
+const storageKey = 'jarvis-memory';
+const historyKey = 'jarvis-history';
+
+function loadMemory() {
+  try {
+    return JSON.parse(localStorage.getItem(storageKey)) || [];
+  } catch {
+    return [];
+  }
+}
+
+function saveMemory(memory) {
+  localStorage.setItem(storageKey, JSON.stringify(memory));
+}
+
+function loadHistory() {
+  try {
+    return JSON.parse(localStorage.getItem(historyKey)) || [];
+  } catch {
+    return [];
+  }
+}
+
+function saveHistory(entries) {
+  localStorage.setItem(historyKey, JSON.stringify(entries));
+}
+
+let memory = loadMemory();
+let history = loadHistory();
+
+function addMessage(role, text) {
+  const bubble = document.createElement('div');
+  bubble.className = `chat-bubble ${role}`;
+  bubble.textContent = text;
+  chatArea.appendChild(bubble);
+  chatArea.scrollTop = chatArea.scrollHeight;
+
+  history.push({ role, text, ts: new Date().toLocaleString() });
+  saveHistory(history);
+}
+
+function respondTo(input) {
+  const text = input.trim();
+  if (!text) return;
+
+  addMessage('user', text);
+  memory.push({ text, ts: new Date().toLocaleString() });
+  saveMemory(memory);
+
+  const lower = text.toLowerCase();
+  let answer = 'I have logged the request and I am ready to assist.';
+
+  if (/(hola|hello|hi|saludo|hey)/.test(lower)) {
+    answer = 'Hello. JARVIS is online and ready. How may I help you?';
+  } else if (/(gps|mapa|ruta|ubicacion|location|direccion)/.test(lower)) {
+    answer = 'GPS lock confirmed. Current location: New York City. Route optimization active. Would you like directions?';
+  } else if (/(camara|camera|feed|vigilancia|monitoreo)/.test(lower)) {
+    answer = 'Live feeds are active for Tokyo, Paris, London, and New York. Which feed would you like to focus on?';
+  } else if (/(weather|clima|temperatura|lluvia|rain)/.test(lower)) {
+    answer = 'Weather is stable. Current temperature: 21°C. Clear sky and low wind. No major weather warnings.';
+  } else if (/(luz|lights|smart home|casa|dispositivo|encender|apagar)/.test(lower)) {
+    answer = 'Smart home subsystem is active. Lights, thermostat, lock, TV, and speakers are synchronized and responding.';
+  } else if (/(save|guardar|history|historial|remember|recuerda)/.test(lower)) {
+    answer = 'I have saved this request in my memory log for future recall.';
+  } else if (/(hora|time|what time)/.test(lower)) {
+    answer = `System time is synchronized. Current time: ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}.`;
+  } else if (/(help|ayuda|what can you do)/.test(lower)) {
+    answer = 'I can help with GPS, cameras, weather, smart home, security, conversations, task management, and system monitoring.';
+  } else if (/(whatsapp|instagram|contacto|contact)/.test(lower)) {
+    answer = 'Contact info is available. WhatsApp: +52 5659913650. Instagram: @razb_15.';
+  } else if (/(status|estado|system|sistema)/.test(lower)) {
+    answer = 'All systems are operational. CPU 42%, Power 78%, Security 92%. No anomalies detected.';
+  } else if (/(reproducir|play|music|audio|speaker)/.test(lower)) {
+    answer = 'Speaker system is active and ready. I can adjust volume or activate entertainment mode.';
+  } else if (/(tv|television|tele)/.test(lower)) {
+    answer = 'TV system is online and ready. I can switch inputs or open the interface.';
+  } else if (/(lock|puerta|casa|seguridad)/.test(lower)) {
+    answer = 'Security lock is active. Home protection is enabled and monitoring all entrances.';
+  } else {
+    const fallback = [
+      'I have processed your request and stored it in memory.',
+      'System is executing the command sequence.',
+      'Protocol accepted. Awaiting further instruction.',
+      'I understand. The system is ready for the next action.'
+    ];
+    answer = fallback[Math.floor(Math.random() * fallback.length)];
+  }
+
+  setTimeout(() => {
+    addMessage('ai', answer);
+  }, 260);
+}
+
+function sendMessage() {
+  const value = userInput.value.trim();
+  if (!value) return;
+  respondTo(value);
+  userInput.value = '';
+  userInput.focus();
+}
+
+sendBtn.addEventListener('click', sendMessage);
+userInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') sendMessage();
+});
+
+quickHelp.addEventListener('click', () => {
+  respondTo('help');
+});
+
+quickStatus.addEventListener('click', () => {
+  respondTo('status');
+});
+
+quickHome.addEventListener('click', () => {
+  respondTo('smart home');
+});
+
+// Voice recording
+function openVoiceModal() {
+  voiceModal.classList.remove('hidden');
+}
+
+function closeVoice() {
+  voiceModal.classList.add('hidden');
+}
+
+voiceTrigger.addEventListener('click', openVoiceModal);
+closeVoice.addEventListener('click', closeVoice);
+
+const startVoiceBtn = document.getElementById('startVoice');
+
+startVoiceBtn.addEventListener('click', () => {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    voiceStatus.textContent = 'Tu navegador no soporta reconocimiento de voz.';
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+  recognition.lang = 'es-MX';
+  recognition.interimResults = false;
+
+  voiceStatus.textContent = 'Escuchando...';
+
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript;
+    voiceTranscript.textContent = transcript;
+    userInput.value = transcript;
+    respondTo(transcript);
+  };
+
+  recognition.onerror = () => {
+    voiceStatus.textContent = 'No pude escuchar. Inténtalo de nuevo.';
+  };
+
+  recognition.onend = () => {
+    voiceStatus.textContent = 'Listo. Puedes seguir con otra instrucción.';
+    closeVoice();
+  };
+
+  recognition.start();
+});
+
+// History
+function renderHistory() {
+  const items = history.length ? history.slice().reverse() : [{ role: 'ai', text: 'Sin historial aún.' }];
+  historyList.innerHTML = items.map(item => `
+    <div class="history-item">
+      <strong>${item.role === 'user' ? 'Usuario' : 'JARVIS'}</strong><br>
+      ${item.text}
+    </div>
+  `).join('');
+}
+
+historyTrigger.addEventListener('click', () => {
+  renderHistory();
+  historyModal.classList.remove('hidden');
+});
+
+closeHistory.addEventListener('click', () => {
+  historyModal.classList.add('hidden');
+});
+
+// Contact tap actions
+const whatsappCard = document.getElementById('whatsappCard');
+const instagramCard = document.getElementById('instagramCard');
+
+whatsappCard.addEventListener('click', () => {
+  respondTo('whatsapp');
+});
+
+instagramCard.addEventListener('click', () => {
+  respondTo('instagram');
+});
+
+// Add some default memory on first load
+if (!memory.length) {
+  memory = [
+    { text: 'JARVIS online', ts: new Date().toLocaleString() },
+    { text: 'All systems ready', ts: new Date().toLocaleString() }
+  ];
+  saveMemory(memory);
+}
+
+if (!history.length) {
+  history = [
+    { role: 'ai', text: 'JARVIS online. All systems operational. How may I assist you today?', ts: new Date().toLocaleString() },
+    { role: 'ai', text: 'JARVIS initialization complete. All systems online and operational. Ready to serve you.', ts: new Date().toLocaleString() }
+  ];
+  saveHistory(history);
+}
+
+// Show some initial state
+renderHistory();
+userInput.focus();
+
+window.addEventListener('load', () => {
+  const existing = history.slice(-2);
+  existing.forEach(item => addMessage(item.role, item.text));
+});
+
+window.addEventListener('touchstart', () => {}, { passive: true });
+

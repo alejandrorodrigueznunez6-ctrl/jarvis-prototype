@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JARVIS CORE</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="phone-shell">
+    <div class="statusbar">
+      <div class="time">10:21</div>
+      <div class="status-icons">
+        <span>◔</span>
+        <span>📶</span>
+        <span>🔋 13%</span>
+      </div>
+    </div>
+
+    <header class="topbar">
+      <div class="nav-left">
+        <button class="icon-btn" aria-label="Close">✕</button>
+        <button class="icon-btn" aria-label="Down">⌄</button>
+      </div>
+
+      <div class="brand-wrap">
+        <div class="brand-name">JARVIS CORE SYSTEM</div>
+      </div>
+
+      <div class="nav-right">
+        <button class="icon-btn" id="voiceTrigger" aria-label="Voice input">🎙️</button>
+        <button class="icon-btn" id="historyTrigger" aria-label="History">☰</button>
+      </div>
+    </header>
+
+    <div class="mini-top-row">
+      <div class="avatar">🤖</div>
+      <div class="section-badges">
+        <span class="badge">STATUS</span>
+        <span class="badge badge-green">// GREEN</span>
+      </div>
+    </div>
+
+    <div class="contact-row">
+      <div class="contact-card whatsapp" id="whatsappCard">
+        <div class="card-title">WhatsApp</div>
+        <div class="card-value">+52 5659913650</div>
+      </div>
+      <div class="contact-card instagram" id="instagramCard">
+        <div class="card-title">Instagram</div>
+        <div class="card-value">@razb_15</div>
+      </div>
+    </div>
+
+    <main class="chat-area" id="chatArea">
+      <div class="chat-bubble ai" data-role="ai">
+        JARVIS online. All systems operational. How may I assist you today?
+      </div>
+      <div class="chat-bubble ai" data-role="ai">
+        JARVIS initialization complete. All systems online and operational. Ready to serve you.
+      </div>
+    </main>
+
+    <div class="input-bar">
+      <input id="userInput" type="text" placeholder="Ask JARVIS..." aria-label="Message input" />
+      <button id="sendBtn" class="send-btn">➤</button>
+    </div>
+
+    <div class="bottom-nav">
+      <button class="nav-pill" id="quickHelp">HELP</button>
+      <button class="nav-pill" id="quickStatus">STATUS</button>
+      <button class="nav-pill" id="quickHome">HOME</button>
+    </div>
+  </div>
+
+  <div id="voiceModal" class="modal hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Voice Assistant</h3>
+        <button id="closeVoice" class="close-btn">✕</button>
+      </div>
+      <p id="voiceStatus">Presiona iniciar para hablar.</p>
+      <button id="startVoice" class="action-btn">INICIAR</button>
+      <div id="voiceTranscript" class="transcript-box">Esperando instrucciones...</div>
+    </div>
+  </div>
+
+  <div id="historyModal" class="modal hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Historial</h3>
+        <button id="closeHistory" class="close-btn">✕</button>
+      </div>
+      <div id="historyList" class="history-list"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
