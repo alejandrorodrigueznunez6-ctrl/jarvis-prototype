@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JARVIS CORE SYSTEM v2.0</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="jarvis-container">
+    <!-- HUD Corners -->
+    <div class="hud-corners">
+      <span class="corner tl"></span>
+      <span class="corner tr"></span>
+      <span class="corner bl"></span>
+      <span class="corner br"></span>
+    </div>
+
+    <!-- Top Bar -->
+    <header class="topbar">
+      <div class="brand"><span class="pulse-dot"></span> JARVIS / CORE SYSTEM v2.0</div>
+      <div class="status-bar">
+        <span class="pill online">● ONLINE</span>
+        <span class="time" id="sysTime">22:14 UTC</span>
+        <span class="security">SECURITY // GREEN</span>
+      </div>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="main-layout">
+      <!-- LEFT COLUMN: Chat & Tasks -->
+      <div class="left-col">
+        <!-- Chat Panel -->
+        <section class="panel chat-panel">
+          <div class="panel-header">
+            <span>INTELLIGENCE CORE</span>
+            <div class="header-buttons">
+              <button id="voiceBtn" title="Voice Input">🎤</button>
+              <button id="historyBtn" title="Show History">📋</button>
+            </div>
+          </div>
+          <div class="chat-output" id="chatOutput">
+            <div class="message ai">JARVIS online. All systems operational. How may I assist you today?</div>
+          </div>
+          <div class="chat-input">
+            <input id="chatInput" type="text" placeholder="Ask JARVIS anything..." />
+            <button id="sendBtn" class="send-btn">EXECUTE</button>
+          </div>
+        </section>
+
+        <!-- Dashboard Stats -->
+        <section class="panel stats-panel">
+          <div class="panel-header"><span>SYSTEM STATUS</span><span>LIVE</span></div>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <h4>CPU</h4>
+              <div class="metric">42%</div>
+              <div class="bar"><span style="width:42%"></span></div>
+              <p>Peak load stable</p>
+            </div>
+            <div class="stat-card">
+              <h4>POWER</h4>
+              <div class="metric">78%</div>
+              <div class="bar"><span style="width:78%"></span></div>
+              <p>Battery reserve</p>
+            </div>
+            <div class="stat-card">
+              <h4>SECURITY</h4>
+              <div class="metric">92%</div>
+              <div class="bar"><span style="width:92%"></span></div>
+              <p>Threat monitoring</p>
+            </div>
+            <div class="stat-card">
+              <h4>GPS</h4>
+              <div class="metric">NYC</div>
+              <p>40.7128°N | 74.0060°W</p>
+            </div>
+            <div class="stat-card">
+              <h4>WEATHER</h4>
+              <div class="metric">21°C</div>
+              <p>Clear sky, low wind</p>
+            </div>
+            <div class="stat-card">
+              <h4>CONNECTED</h4>
+              <div class="metric">14</div>
+              <p>Devices online</p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- RIGHT COLUMN: Maps, Cameras, Devices -->
+      <div class="right-col">
+        <!-- Map -->
+        <section class="panel map-panel">
+          <div class="panel-header"><span>GLOBAL MAP</span><span>GPS</span></div>
+          <div class="map-container">
+            <div class="map-pin" style="left:62%; top:38%;"></div>
+            <div class="map-pin" style="left:72%; top:65%;"></div>
+            <div class="map-pin" style="left:35%; top:52%;"></div>
+          </div>
+        </section>
+
+        <!-- Cameras -->
+        <section class="panel cameras-panel">
+          <div class="panel-header"><span>CAMERA FEEDS</span><span>LIVE</span></div>
+          <div class="camera-grid">
+            <div class="camera" data-location="TOKYO"></div>
+            <div class="camera" data-location="PARIS"></div>
+            <div class="camera" data-location="LONDON"></div>
+            <div class="camera" data-location="NEW YORK"></div>
+          </div>
+        </section>
+
+        <!-- Smart Devices -->
+        <section class="panel devices-panel">
+          <div class="panel-header"><span>SMART DEVICES</span><span>CONTROL</span></div>
+          <div class="devices-list">
+            <div class="device-item">
+              <span>💡 Living Room Lights</span>
+              <div class="toggle on" data-device="lights"></div>
+            </div>
+            <div class="device-item">
+              <span>🌡️ Thermostat</span>
+              <div class="toggle on" data-device="thermostat"></div>
+            </div>
+            <div class="device-item">
+              <span>🔒 Security Lock</span>
+              <div class="toggle on" data-device="lock"></div>
+            </div>
+            <div class="device-item">
+              <span>📺 TV</span>
+              <div class="toggle" data-device="tv"></div>
+            </div>
+            <div class="device-item">
+              <span>🎵 Speaker System</span>
+              <div class="toggle on" data-device="speaker"></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- Social Media Sidebar -->
+    <div class="social-sidebar">
+      <div class="social-item">
+        <span class="icon">💬</span>
+        <span class="label">WhatsApp</span>
+        <span class="contact">+52 5659913650</span>
+      </div>
+      <div class="social-item">
+        <span class="icon">📷</span>
+        <span class="label">Instagram</span>
+        <span class="contact">@razb_15</span>
+      </div>
+    </div>
+
+    <!-- Notifications Panel -->
+    <div id="notifications" class="notifications"></div>
+
+    <!-- Modal for Voice/History -->
+    <div id="voiceModal" class="modal hidden">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeVoiceModal()">&times;</span>
+        <h2>🎤 VOICE ASSISTANT</h2>
+        <p id="voiceStatus">Click to start listening...</p>
+        <button id="startVoiceBtn" onclick="startVoiceRecognition()">START LISTENING</button>
+        <div id="voiceTranscript"></div>
+      </div>
+    </div>
+
+    <div id="historyModal" class="modal hidden">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeHistoryModal()">&times;</span>
+        <h2>📋 CONVERSATION HISTORY</h2>
+        <div id="historyContent" class="history-scroll"></div>
+        <button onclick="clearHistory()">CLEAR HISTORY</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

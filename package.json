@@ -1,0 +1,1 @@
+{"name":"jarvis-prototype","version":"2.0.0","description":"JARVIS - Futuristic AI Assistant with Smart Home Control, GPS, Cameras, and Social Integration","main":"index.html","scripts":{"start":"python -m http.server 8000"},"keywords":["jarvis","assistant","ai","smart-home","iot","voice"],"author":"Alejandro","license":"MIT"}
